@@ -36,14 +36,20 @@ public class World {
     }
 
     public void render(float delta, SpriteBatch batch, Assets assets){
+        if (lifes > 0){
+            update(delta, assets);
+            batch.begin();
+            space.render(batch);
+            ship.render(batch);
+            alienArmy.render(batch);
+            font.draw(batch, "SCORE: " +  score,20 , WORLD_HEIGHT - 5);
+            shipLife.render(batch);
+        }
+        else {
 
-        update(delta, assets);
-        batch.begin();
-        space.render(batch);
-        ship.render(batch);
-        alienArmy.render(batch);
-        font.draw(batch, "SCORE: " +  score,20 , WORLD_HEIGHT - 5);
-        shipLife.render(batch);
+            batch.begin();
+            font.draw(batch, "YOU LOSE",WORLD_WIDTH/2 - 30 , WORLD_HEIGHT/2);
+        }
 
         batch.end();
     }
@@ -111,7 +117,7 @@ public class World {
         }
 
         for(AlienShoot shoot: alienArmy.shoots){
-            if(shoot.position.y < 0){
+            if(shoot.position.y < 0 || ship.isPausa()){
                 shoot.remove();
             }
         }

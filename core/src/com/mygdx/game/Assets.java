@@ -40,6 +40,6 @@ public class Assets extends AssetManager {
         naveshoot = new Animation<TextureRegion>(0.1f, atlas.findRegions("naveshoot"));
         shoot = new Animation<TextureRegion>(0.02f, atlas.findRegions("shoot"));
         alienshoot = new Animation<TextureRegion>(0.1f, atlas.findRegions("alienshoot"));
-        navedie = new Animation<TextureRegion>(0.1f, atlas.findRegions("explousion"));
+        navedie = new Animation<TextureRegion>(0.05f, atlas.findRegions("explousion"));
     }
 }
