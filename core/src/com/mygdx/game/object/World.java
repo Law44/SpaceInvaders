@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.Assets;
+import com.mygdx.game.Timer;
 
 public class World {
     Space space;
@@ -12,8 +13,11 @@ public class World {
     AlienArmy alienArmy;
     BitmapFont font;
     ShipLife shipLife;
+    Timer pauseTimer;
+    float pause = 3;
     int lifes = 3;
     int score;
+    boolean pausa;
 
 
     int WORLD_WIDTH, WORLD_HEIGHT;
@@ -28,12 +32,12 @@ public class World {
         ship = new Ship(WORLD_WIDTH/2);
         alienArmy = new AlienArmy(WORLD_WIDTH, WORLD_HEIGHT);
         font = new BitmapFont();
+        pauseTimer = new Timer(pause);
     }
 
     public void render(float delta, SpriteBatch batch, Assets assets){
 
         update(delta, assets);
-
         batch.begin();
         space.render(batch);
         ship.render(batch);
@@ -45,12 +49,19 @@ public class World {
     }
 
     public void update(float delta, Assets assets){
-        space.update(delta, assets);
-        ship.update(delta, assets);
-        alienArmy.update(delta, assets);
-        shipLife.update(lifes, delta, assets);
-
-        checkCollisions(assets);
+        if (!ship.isPausa()) {
+            space.update(delta, assets);
+            ship.update(delta, assets);
+            alienArmy.update(delta, assets);
+            shipLife.update(lifes, delta, assets);
+            checkCollisions(assets);
+        }
+        else {
+            pauseTimer.update(delta);
+            if (pauseTimer.check()){
+                ship.revive();
+            }
+        }
     }
 
     private void checkCollisions(Assets assets) {

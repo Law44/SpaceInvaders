@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets extends AssetManager {
     public TextureAtlas atlas;
-    public Animation<TextureRegion> space, alien, aliendie, naveidle, naveleft, naveright, naveshoot, shoot ,alienshoot;
+    public Animation<TextureRegion> space, alien, aliendie, naveidle, naveleft, naveright, naveshoot, shoot ,alienshoot, navedie;
     public Sound shootSound = Gdx.audio.newSound(Gdx.files.internal("shootsound.wav"));
     public Sound alienSound = Gdx.audio.newSound(Gdx.files.internal("aliensound.wav"));
     public Sound aliendieSound = Gdx.audio.newSound(Gdx.files.internal("aliendie.wav"));
@@ -32,7 +32,6 @@ public class Assets extends AssetManager {
 
     void loadAnimations(){
         space = new Animation<TextureRegion>(1f, atlas.findRegions("space"));
-
         alien = new Animation<TextureRegion>(0.4f, atlas.findRegions("alien"));
         aliendie = new Animation<TextureRegion>(0.05f, atlas.findRegions("aliendie"));
         naveidle = new Animation<TextureRegion>(0.1f, atlas.findRegions("naveidle"));
@@ -41,5 +40,6 @@ public class Assets extends AssetManager {
         naveshoot = new Animation<TextureRegion>(0.1f, atlas.findRegions("naveshoot"));
         shoot = new Animation<TextureRegion>(0.02f, atlas.findRegions("shoot"));
         alienshoot = new Animation<TextureRegion>(0.1f, atlas.findRegions("alienshoot"));
+        navedie = new Animation<TextureRegion>(0.1f, atlas.findRegions("explousion"));
     }
 }
