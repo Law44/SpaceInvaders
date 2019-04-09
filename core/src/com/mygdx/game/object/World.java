@@ -87,6 +87,7 @@ public class World {
     private void checkStatusGame(){
         checkAliensNumber();
         checkGetBonus();
+        checkBonusinWorld();
     }
 
 
@@ -180,6 +181,17 @@ public class World {
                 Rectangle bonusRectangle = new Rectangle(alien.bonus.position.x, alien.bonus.position.y, alien.bonus.frame.getRegionWidth(), alien.bonus.frame.getRegionHeight());
                 if (Intersector.overlaps(bonusRectangle, shipRectangle)) {
                     alien.bonus.getBonus();
+                    lifes++;
+                }
+            }
+        }
+    }
+
+    private void checkBonusinWorld(){
+        for (Alien alien : alienArmy.aliens) {
+            if (alien.bonus.isStart()) {
+                if (alien.bonus.position.y < 0) {
+                    alien.bonus.deleteBonus();
                 }
             }
         }

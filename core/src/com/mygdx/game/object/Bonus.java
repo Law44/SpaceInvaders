@@ -11,17 +11,31 @@ public class Bonus {
     float stateTime;
     TextureRegion frame;
     boolean start;
+    boolean get;
+    boolean delete;
 
     public Bonus(float x, float y) {
         this.position = new Vector2(x, y);
     }
 
     public void getBonus(){
-        this.start = false;
+        this.get = true;
+    }
+
+    public void deleteBonus(){
+        this.delete = true;
+    }
+
+    public boolean isDeleted(){
+        return delete;
     }
 
     public boolean isStart() {
         return start;
+    }
+
+    public boolean isGet() {
+        return get;
     }
 
     public void spawn(boolean start, float x, float y) {

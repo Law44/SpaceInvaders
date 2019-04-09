@@ -21,6 +21,8 @@ public class AlienArmy {
     Timer moveTimer, shootTimer,alienMoveDown;
     Random random = new Random();
 
+    int contador;
+
     AlienArmy(int WORLD_WIDTH, int WORLD_HEIGHT){
 
         this.x = 0;
@@ -33,6 +35,8 @@ public class AlienArmy {
         moveTimer = new Timer(0.8f);
         shootTimer = new Timer(random.nextFloat()%5+1);
         alienMoveDown = new Timer(5f);
+
+        contador = 0;
 
         positionAliens();
     }
@@ -58,6 +62,7 @@ public class AlienArmy {
         alienGoDown();
 
         for(Alien alien: aliens) {
+            if (alien.state == Alien.State.LIVE)contador++;
             alien.update(delta, assets);
         }
 
@@ -100,6 +105,7 @@ public class AlienArmy {
             }
 
             for (Alien alien : aliens) {
+                if (contador ==1 && alien.state == Alien.State.LIVE)alien.powerUp=0;
                 if (alien.state == Alien.State.MOVINGDOWN || alien.state == Alien.State.FORMING){
                     alienMoveDown.reset();
                     alien.position.y -= speedY;
@@ -107,6 +113,7 @@ public class AlienArmy {
                 alien.position.x += speedX;
             }
         }
+        contador = 0;
     }
 
     void shoot(Assets assets){
