@@ -10,7 +10,7 @@ public class Weapon {
     Array<Shoot> shoots;
 
     Timer shootTimer;
-    float shootRate = 0f;
+    float shootRate = 0.4f;
 
     Weapon(){
         shoots = new Array<Shoot>();
