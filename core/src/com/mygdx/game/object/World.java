@@ -17,7 +17,6 @@ public class World {
     float pause = 3;
     int lifes = 3;
     int score;
-    boolean pausa;
 
 
     int WORLD_WIDTH, WORLD_HEIGHT;
@@ -46,16 +45,22 @@ public class World {
             shipLife.render(batch);
         }
         else {
-
+            update(delta,assets);
             batch.begin();
-            font.draw(batch, "YOU LOSE",WORLD_WIDTH/2 - 30 , WORLD_HEIGHT/2);
+            space.render(batch);
+            ship.render(batch);
+            alienArmy.render(batch);
+            if (ship.isRespawning()) {
+                font.draw(batch, "YOU LOSE", WORLD_WIDTH / 2 - 30, WORLD_HEIGHT / 2);
+            }
+
         }
 
         batch.end();
     }
 
     public void update(float delta, Assets assets){
-        if (!ship.isPausa()) {
+        if (!ship.isRespawning()) {
             space.update(delta, assets);
             ship.update(delta, assets);
             alienArmy.update(delta, assets);
@@ -87,6 +92,7 @@ public class World {
                 ship.damage();
                 lifes--;
                 shoot.remove();
+                score = 0;
             }
         }
     }
@@ -117,7 +123,7 @@ public class World {
         }
 
         for(AlienShoot shoot: alienArmy.shoots){
-            if(shoot.position.y < 0 || ship.isPausa()){
+            if(shoot.position.y < 0 || ship.isRespawning()){
                 shoot.remove();
             }
         }

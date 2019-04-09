@@ -9,7 +9,7 @@ import com.mygdx.game.Controls;
 public class Ship {
 
     enum State {
-        IDLE, LEFT, RIGHT, SHOOT, DYING;
+        IDLE, LEFT, RIGHT, SHOOT, DYING, RESPAWN;
     }
 
     Vector2 position;
@@ -17,16 +17,11 @@ public class Ship {
     State state;
     float stateTime;
     float speed = 5;
-    boolean pausa;
     int initialPosition;
 
     TextureRegion frame;
 
     Weapon weapon;
-
-    public boolean isPausa() {
-        return pausa;
-    }
 
     Ship(int initialPosition){
         position = new Vector2(initialPosition, 10);
@@ -37,6 +32,9 @@ public class Ship {
         weapon = new Weapon();
     }
 
+    public boolean isRespawning() {
+        return state == State.RESPAWN;
+    }
 
     void setFrame(Assets assets){
         switch (state){
@@ -55,6 +53,9 @@ public class Ship {
             case DYING:
                 frame = assets.navedie.getKeyFrame(stateTime);
                 break;
+            case RESPAWN:
+                frame = assets.navedie.getKeyFrame(11);
+                break;
             default:
                 frame = assets.naveidle.getKeyFrame(stateTime, true);
                 break;
@@ -70,7 +71,11 @@ public class Ship {
     public void update(float delta, Assets assets) {
         stateTime += delta;
 
-        if(Controls.isLeftPressed() && state != State.DYING){
+        if (state == State.DYING) {
+            if (assets.navedie.isAnimationFinished(stateTime)) {
+                state = State.RESPAWN;
+            }
+        }else if(Controls.isLeftPressed() && state != State.DYING){
             moveLeft();
         } else if(Controls.isRightPressed() && state != State.DYING){
             moveRight();
@@ -78,10 +83,6 @@ public class Ship {
             moveUp();
         } else if(Controls.isDownPressed() && state != State.DYING){
             moveDown();
-        } else if (state == State.DYING){
-            if(assets.navedie.isAnimationFinished(stateTime)){
-                pausa = true;
-            }
         } else {
             idle();
         }
@@ -137,6 +138,5 @@ public class Ship {
         position.x = initialPosition;
         position.y = 10;
         idle();
-        pausa = false;
     }
 }
