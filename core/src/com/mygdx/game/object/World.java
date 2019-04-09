@@ -80,6 +80,7 @@ public class World {
         checkShootsInWorld();
         checkShootsToAlien(assets);
         checkShootsToShip();
+        checkGetBonus();
     }
 
     private void checkShootsToShip() {
@@ -110,6 +111,19 @@ public class World {
                         assets.aliendieSound.play();
                         score+= 100;
                     }
+                }
+            }
+        }
+    }
+
+    private void checkGetBonus() {
+        Rectangle shipRectangle = new Rectangle(ship.position.x, ship.position.y, ship.frame.getRegionWidth(), ship.frame.getRegionHeight());
+
+        for (Alien alien : alienArmy.aliens) {
+            if (alien.bonus.isStart()) {
+                Rectangle bonusRectangle = new Rectangle(alien.bonus.position.x, alien.bonus.position.y, alien.bonus.frame.getRegionWidth(), alien.bonus.frame.getRegionHeight());
+                if (Intersector.overlaps(bonusRectangle, shipRectangle)) {
+                    alien.bonus.getBonus();
                 }
             }
         }

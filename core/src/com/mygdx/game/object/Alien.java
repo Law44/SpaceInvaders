@@ -30,7 +30,9 @@ public class Alien {
     public void render(SpriteBatch batch) {
         batch.draw(frame, position.x, position.y);
         if (state == State.DYING) {
-            bonus.render(batch);
+            if (bonus.isStart()) {
+                bonus.render(batch);
+            }
         }
     }
 
@@ -46,8 +48,8 @@ public class Alien {
             if (powerUp >= 8.0 && !bonus.isStart()) {
                 bonus.spawn(true, position.x, position.y);
             }
-            if(assets.aliendie.isAnimationFinished(stateTime)){
-                //state = State.DEAD;
+            else if(assets.aliendie.isAnimationFinished(stateTime) && !bonus.isStart()){
+                state = State.DEAD;
             }
         }
 

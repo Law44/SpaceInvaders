@@ -16,6 +16,10 @@ public class Bonus {
         this.position = new Vector2(x, y);
     }
 
+    public void getBonus(){
+        this.start = false;
+    }
+
     public boolean isStart() {
         return start;
     }

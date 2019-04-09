@@ -75,19 +75,19 @@ public class Ship {
             if (assets.navedie.isAnimationFinished(stateTime)) {
                 state = State.RESPAWN;
             }
-        }else if(Controls.isLeftPressed() && state != State.DYING){
+        }else if(Controls.isLeftPressed()){
             moveLeft();
-        } else if(Controls.isRightPressed() && state != State.DYING){
+        } else if(Controls.isRightPressed()){
             moveRight();
-        } else if(Controls.isUpPressed() && state != State.DYING){
+        } else if(Controls.isUpPressed()){
             moveUp();
-        } else if(Controls.isDownPressed() && state != State.DYING){
+        } else if(Controls.isDownPressed()){
             moveDown();
         } else {
             idle();
         }
 
-        if(Controls.isShootPressed()) {
+        if(Controls.isShootPressed() && state != State.DYING) {
             shoot();
             assets.shootSound.play();
         }
