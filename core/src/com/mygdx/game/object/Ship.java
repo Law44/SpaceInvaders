@@ -9,7 +9,7 @@ import com.mygdx.game.Controls;
 public class Ship {
 
     enum State {
-        IDLE, LEFT, RIGHT, SHOOT;
+        IDLE, LEFT, RIGHT, SHOOT, WINNER
     }
 
     Vector2 position;
@@ -57,10 +57,11 @@ public class Ship {
         weapon.render(batch);
     }
 
-    public void update(float delta, Assets assets) {
+    public void update(float delta, Assets assets, int WORLD_WIDTH) {
         stateTime += delta;
-
-        if(Controls.isLeftPressed()){
+        if (state == State.WINNER){
+            nextScreen(WORLD_WIDTH);
+        }else if(Controls.isLeftPressed()){
             moveLeft();
         } else if(Controls.isRightPressed()){
             moveRight();
@@ -112,5 +113,17 @@ public class Ship {
     }
 
     public void damage() {
+    }
+
+    private void nextScreen(int WORLD_WIDTH) {
+        this.position.y += speed/4;
+        int limit =frame.getRegionWidth()/2;
+        if (this.position.x < WORLD_WIDTH/2- limit || this.position.x > WORLD_WIDTH/2-limit){
+            if (this.position.x < WORLD_WIDTH/2- limit){
+                this.position.x += speed/2;
+            }else {
+                this.position.x -= speed/2;
+            }
+        }
     }
 }

@@ -7,18 +7,22 @@ import com.mygdx.game.Assets;
 
 public class Alien {
 
+    private boolean moveDown;
+    int fila;
+    private boolean formAgain;
+
     enum State {
         LIVE, DYING, DEAD
     }
-
     Vector2 position;
     float stateTime;
     TextureRegion frame;
     State state;
 
-    public Alien(int x, int y) {
+    public Alien(int x, int y, int fila) {
         position = new Vector2(x, y);
         state = State.LIVE;
+        this.fila = fila;
     }
 
     public void render(SpriteBatch batch) {
@@ -47,10 +51,22 @@ public class Alien {
     public void kill() {
         state = State.DYING;
         stateTime = 0;
+
     }
 
     public boolean isAlive() {
         return state == State.LIVE;
     }
 
+    public void setMoveDown(boolean moveDown) { this.moveDown = moveDown; }
+
+    public boolean isMoveDown() { return moveDown;    }
+
+    public void setFormAgain(boolean formAgain) {
+        this.formAgain = formAgain;
+    }
+
+    public boolean isFormAgain() {
+        return formAgain;
+    }
 }

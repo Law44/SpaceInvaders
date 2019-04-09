@@ -14,9 +14,13 @@ public class World {
     ShipLife shipLife;
     int lifes = 3;
     int score;
-
+    enum StateGame{
+        FINISHED,ONGOING,PAUSED
+    }
+    StateGame stateGame;
 
     int WORLD_WIDTH, WORLD_HEIGHT;
+    private Alien alienMovingDown;
 
     public World(int WORLD_WIDTH, int WORLD_HEIGHT){
         this.WORLD_WIDTH = WORLD_WIDTH;
@@ -28,6 +32,7 @@ public class World {
         ship = new Ship(WORLD_WIDTH/2);
         alienArmy = new AlienArmy(WORLD_WIDTH, WORLD_HEIGHT);
         font = new BitmapFont();
+        stateGame = StateGame.ONGOING;
     }
 
     public void render(float delta, SpriteBatch batch, Assets assets){
@@ -37,27 +42,80 @@ public class World {
         batch.begin();
         space.render(batch);
         ship.render(batch);
-        alienArmy.render(batch);
+        if (stateGame == StateGame.ONGOING)alienArmy.render(batch);
         font.draw(batch, "SCORE: " +  score,20 , WORLD_HEIGHT - 5);
         shipLife.render(batch);
+        if (stateGame == StateGame.FINISHED)font.draw(batch,"YOU WIN \n"+score,WORLD_WIDTH/2-40,WORLD_HEIGHT/2);
 
         batch.end();
     }
 
     public void update(float delta, Assets assets){
         space.update(delta, assets);
-        ship.update(delta, assets);
-        alienArmy.update(delta, assets);
+        ship.update(delta, assets,WORLD_WIDTH);
+        if (stateGame ==StateGame.ONGOING)alienArmy.update(delta, assets);
         shipLife.update(lifes, delta, assets);
 
         checkCollisions(assets);
+        checkStatusGame();
     }
+
+    private void checkStatusGame(){
+        checkAliensNumber();
+
+    }
+
+
 
     private void checkCollisions(Assets assets) {
         checkNaveInWorld();
         checkShootsInWorld();
         checkShootsToAlien(assets);
         checkShootsToShip();
+        checkAlienInWorld();
+        checkAlienCollisionShip();
+    }
+
+    private void checkAlienCollisionShip() {
+        if (alienMovingDown != null){
+            Rectangle shipRectangle = new Rectangle(ship.position.x, ship.position.y, ship.frame.getRegionWidth(), ship.frame.getRegionHeight());
+            Rectangle alienRectangle = new Rectangle(alienMovingDown.position.x, alienMovingDown.position.y, alienMovingDown.frame.getRegionWidth(), alienMovingDown.frame.getRegionHeight());
+            if (Intersector.overlaps(alienRectangle, shipRectangle)) {
+                ship.damage();
+                lifes--;
+                alienMovingDown.kill();
+                alienMovingDown.setFormAgain(false);
+                alienMovingDown.setMoveDown(false);
+                alienMovingDown = null;
+            }
+        }
+    }
+
+    private void checkAliensNumber() {
+        if (alienArmy.aliens.size == 0){
+            ship.state = Ship.State.WINNER;
+            stateGame = StateGame.FINISHED;
+        }
+    }
+
+    private void checkAlienInWorld() {
+        for(Alien alien : alienArmy.aliens){
+            if (alien.isMoveDown()){
+                alienMovingDown = alien;
+                if (alien.position.y<0){
+                    alien.position.y = WORLD_HEIGHT;
+                    alien.setFormAgain(true);
+                }
+                if (alien.isFormAgain()) {
+                    if (alien.position.y > WORLD_HEIGHT - 40 - alien.fila * 12 && alien.position.y < WORLD_HEIGHT - 20 - alien.fila * 12) {
+                        alien.position.y = WORLD_HEIGHT - 30 - alien.fila * 12;
+                        alien.setMoveDown(false);
+                        alien.setFormAgain(false);
+                        alienMovingDown = null;
+                    }
+                }
+            }
+        }
     }
 
     private void checkShootsToShip() {
@@ -107,15 +165,17 @@ public class World {
     }
 
     private void checkNaveInWorld() {
-        if(ship.position.x > WORLD_WIDTH-32){
-            ship.position.x = WORLD_WIDTH-32;
-        } else if(ship.position.x < 0){
-            ship.position.x = 0;
-        }
-        if (ship.position.y > WORLD_HEIGHT/4-16){
-            ship.position.y = WORLD_HEIGHT/4-16;
-        }else if (ship.position.y < 0 ){
-            ship.position.y = 0;
+        if (stateGame == StateGame.ONGOING) {
+            if (ship.position.x > WORLD_WIDTH - 32) {
+                ship.position.x = WORLD_WIDTH - 32;
+            } else if (ship.position.x < 0) {
+                ship.position.x = 0;
+            }
+            if (ship.position.y > WORLD_HEIGHT / 4 - 16) {
+                ship.position.y = WORLD_HEIGHT / 4 - 16;
+            } else if (ship.position.y < 0) {
+                ship.position.y = 0;
+            }
         }
     }
 }
