@@ -46,13 +46,13 @@ public class Alien {
         }
 
         if(state == State.DYING){
-            if (powerUp >= 9.5 && !bonus.isFalling() && !(bonus.isObtained() || bonus.isDeleted())) {
+            if (powerUp >= 9.1 && !bonus.isFalling() && !(bonus.isObtained() || bonus.isDeleted())) {
                 bonus.spawn(position.x, position.y);
             }
             else if(assets.aliendie.isAnimationFinished(stateTime) && (bonus.isObtained() || bonus.isDeleted())){
                 state = State.DEAD;
             }
-            else if (assets.aliendie.isAnimationFinished(stateTime) && powerUp < 9.5){
+            else if (assets.aliendie.isAnimationFinished(stateTime) && powerUp < 9.1){
                 state = State.DEAD;
             }
 

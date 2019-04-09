@@ -46,7 +46,7 @@ public class Bonus {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(frame, position.x, position.y);
+        batch.draw(frame, position.x, position.y, frame.getRegionWidth()*0.8f, frame.getRegionHeight()*0.8f);
     }
 
     void update(float delta, Assets assets) {
