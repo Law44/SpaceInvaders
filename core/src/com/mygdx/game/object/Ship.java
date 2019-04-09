@@ -9,7 +9,7 @@ import com.mygdx.game.Controls;
 public class Ship {
 
     enum State {
-        IDLE, LEFT, RIGHT, SHOOT, DYING, RESPAWN;
+        IDLE, LEFT, RIGHT, SHOOT, DYING, RESPAWN, WINNER;
     }
 
     Vector2 position;
@@ -68,13 +68,15 @@ public class Ship {
         weapon.render(batch);
     }
 
-    public void update(float delta, Assets assets) {
+    public void update(float delta, Assets assets, int WORLD_WIDTH) {
         stateTime += delta;
 
         if (state == State.DYING) {
             if (assets.navedie.isAnimationFinished(stateTime)) {
                 state = State.RESPAWN;
             }
+        }else if (state == State.WINNER){
+            nextScreen(WORLD_WIDTH);
         }else if(Controls.isLeftPressed()){
             moveLeft();
         } else if(Controls.isRightPressed()){
@@ -138,5 +140,17 @@ public class Ship {
         position.x = initialPosition;
         position.y = 10;
         idle();
+    }
+
+    private void nextScreen(int WORLD_WIDTH) {
+        this.position.y += speed/4;
+        int limit =frame.getRegionWidth()/2;
+        if (this.position.x < WORLD_WIDTH/2- limit || this.position.x > WORLD_WIDTH/2-limit){
+            if (this.position.x < WORLD_WIDTH/2- limit){
+                this.position.x += speed/2;
+            }else {
+                this.position.x -= speed/2;
+            }
+        }
     }
 }

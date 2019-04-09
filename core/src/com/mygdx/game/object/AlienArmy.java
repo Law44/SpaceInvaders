@@ -12,12 +12,13 @@ public class AlienArmy {
 
     int x, y, maxX;
 
-    float speed = 8f;
+    float speedX = 8f;
+    float speedY = 13f;
 
     Array<Alien> aliens;
     Array<AlienShoot> shoots;
 
-    Timer moveTimer, shootTimer;
+    Timer moveTimer, shootTimer,alienMoveDown;
     Random random = new Random();
 
     AlienArmy(int WORLD_WIDTH, int WORLD_HEIGHT){
@@ -31,6 +32,7 @@ public class AlienArmy {
 
         moveTimer = new Timer(0.8f);
         shootTimer = new Timer(random.nextFloat()%5+1);
+        alienMoveDown = new Timer(5f);
 
         positionAliens();
     }
@@ -49,9 +51,11 @@ public class AlienArmy {
     public void update(float delta, Assets assets) {
         moveTimer.update(delta);
         shootTimer.update(delta);
+        alienMoveDown.update(delta);
 
         move();
         shoot(assets);
+        alienGoDown();
 
         for(Alien alien: aliens) {
             alien.update(delta, assets);
@@ -66,30 +70,41 @@ public class AlienArmy {
         removeShoots();
     }
 
+    void alienGoDown() {
+        if (alienMoveDown.check()){
+            aliens.get(random.nextInt(aliens.size)).state = Alien.State.MOVINGDOWN;
+        }
+    }
+
 
     void positionAliens(){
         for (int i = 0; i < 5; i++) {  // fila
             for (int j = 0; j < 11; j++) {  // columna
-                aliens.add(new Alien(j*30 + 10, y - i*12));
+                aliens.add(new Alien(j*30 + 10, y - i*12,i));
             }
         }
+
     }
 
 
     void move() {
         if (moveTimer.check()){
-            x += speed;
+            x += speedX;
 
             if(x > maxX){
                 x = maxX;
-                speed *= -1;
+                speedX *= -1;
             } else if(x < 0){
                 x = 0;
-                speed *= -1;
+                speedX *= -1;
             }
 
             for (Alien alien : aliens) {
-                alien.position.x += speed;
+                if (alien.state == Alien.State.MOVINGDOWN || alien.state == Alien.State.FORMING){
+                    alienMoveDown.reset();
+                    alien.position.y -= speedY;
+                }
+                alien.position.x += speedX;
             }
         }
     }

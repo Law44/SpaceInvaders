@@ -9,10 +9,10 @@ import java.util.Random;
 
 public class Alien {
 
+    int fila;
     enum State {
-        LIVE, DYING, DEAD
+        LIVE, DYING, DEAD, MOVINGDOWN, FORMING
     }
-
     Vector2 position;
     float stateTime;
     TextureRegion frame;
@@ -20,9 +20,10 @@ public class Alien {
     Bonus bonus;
     double powerUp;
 
-    public Alien(int x, int y) {
+    public Alien(int x, int y, int fila) {
         position = new Vector2(x, y);
         state = State.LIVE;
+        this.fila = fila;
         bonus = new Bonus(x, y);
         powerUp = Math.random()*10;
     }
@@ -38,7 +39,7 @@ public class Alien {
 
     void update(float delta, Assets assets){
         stateTime += delta;
-        if(state == State.LIVE) {
+        if(state == State.LIVE || state == State.FORMING || state == State.MOVINGDOWN) {
             frame = assets.alien.getKeyFrame(stateTime, true);
         } else if(state == State.DYING){
             frame = assets.aliendie.getKeyFrame(stateTime, false);
