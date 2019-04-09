@@ -72,7 +72,7 @@ public class AlienArmy {
 
     void alienGoDown() {
         if (alienMoveDown.check()){
-            aliens.get(random.nextInt(aliens.size)).setMoveDown(true);
+            aliens.get(random.nextInt(aliens.size)).state = Alien.State.MOVINGDOWN;
         }
     }
 
@@ -100,7 +100,7 @@ public class AlienArmy {
             }
 
             for (Alien alien : aliens) {
-                if (alien.isMoveDown()){
+                if (alien.state == Alien.State.MOVINGDOWN || alien.state == Alien.State.FORMING){
                     alienMoveDown.reset();
                     alien.position.y -= speedY;
                 }

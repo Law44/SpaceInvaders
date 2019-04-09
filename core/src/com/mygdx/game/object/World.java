@@ -46,7 +46,6 @@ public class World {
         font.draw(batch, "SCORE: " +  score,20 , WORLD_HEIGHT - 5);
         shipLife.render(batch);
         if (stateGame == StateGame.FINISHED)font.draw(batch,"YOU WIN \n"+score,WORLD_WIDTH/2-40,WORLD_HEIGHT/2);
-
         batch.end();
     }
 
@@ -55,7 +54,6 @@ public class World {
         ship.update(delta, assets,WORLD_WIDTH);
         if (stateGame ==StateGame.ONGOING)alienArmy.update(delta, assets);
         shipLife.update(lifes, delta, assets);
-
         checkCollisions(assets);
         checkStatusGame();
     }
@@ -84,8 +82,6 @@ public class World {
                 ship.damage();
                 lifes--;
                 alienMovingDown.kill();
-                alienMovingDown.setFormAgain(false);
-                alienMovingDown.setMoveDown(false);
                 alienMovingDown = null;
             }
         }
@@ -100,17 +96,16 @@ public class World {
 
     private void checkAlienInWorld() {
         for(Alien alien : alienArmy.aliens){
-            if (alien.isMoveDown()){
+            if (alien.state == Alien.State.MOVINGDOWN || alien.state == Alien.State.FORMING){
                 alienMovingDown = alien;
                 if (alien.position.y<0){
                     alien.position.y = WORLD_HEIGHT;
-                    alien.setFormAgain(true);
+                    alien.state = Alien.State.FORMING;
                 }
-                if (alien.isFormAgain()) {
+                if (alien.state == Alien.State.FORMING) {
                     if (alien.position.y > WORLD_HEIGHT - 40 - alien.fila * 12 && alien.position.y < WORLD_HEIGHT - 20 - alien.fila * 12) {
                         alien.position.y = WORLD_HEIGHT - 30 - alien.fila * 12;
-                        alien.setMoveDown(false);
-                        alien.setFormAgain(false);
+                        alien.state = Alien.State.LIVE;
                         alienMovingDown = null;
                     }
                 }

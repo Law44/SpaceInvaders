@@ -7,12 +7,9 @@ import com.mygdx.game.Assets;
 
 public class Alien {
 
-    private boolean moveDown;
     int fila;
-    private boolean formAgain;
-
     enum State {
-        LIVE, DYING, DEAD
+        LIVE, DYING, DEAD, MOVINGDOWN, FORMING
     }
     Vector2 position;
     float stateTime;
@@ -31,7 +28,7 @@ public class Alien {
 
     void update(float delta, Assets assets){
         stateTime += delta;
-        if(state == State.LIVE) {
+        if(state == State.LIVE || state == State.FORMING || state == State.MOVINGDOWN) {
             frame = assets.alien.getKeyFrame(stateTime, true);
         } else if(state == State.DYING){
             frame = assets.aliendie.getKeyFrame(stateTime, false);
@@ -58,15 +55,4 @@ public class Alien {
         return state == State.LIVE;
     }
 
-    public void setMoveDown(boolean moveDown) { this.moveDown = moveDown; }
-
-    public boolean isMoveDown() { return moveDown;    }
-
-    public void setFormAgain(boolean formAgain) {
-        this.formAgain = formAgain;
-    }
-
-    public boolean isFormAgain() {
-        return formAgain;
-    }
 }
