@@ -25,13 +25,13 @@ public class Alien {
         state = State.LIVE;
         this.fila = fila;
         bonus = new Bonus(x, y);
-        powerUp =9;// Math.random()*10;
+        powerUp = Math.random()*10;
     }
 
     public void render(SpriteBatch batch) {
         batch.draw(frame, position.x, position.y);
         if (state == State.DYING) {
-            if (bonus.isStart()) {
+            if (bonus.isFalling()) {
                 bonus.render(batch);
             }
         }
@@ -46,13 +46,13 @@ public class Alien {
         }
 
         if(state == State.DYING){
-            if (powerUp >= 8.0 && !bonus.isStart()) {
-                bonus.spawn(true, position.x, position.y);
+            if (powerUp >= 9.5 && !bonus.isFalling() && !(bonus.isObtained() || bonus.isDeleted())) {
+                bonus.spawn(position.x, position.y);
             }
-            else if(assets.aliendie.isAnimationFinished(stateTime) && (bonus.isGet() || bonus.isDeleted())){
+            else if(assets.aliendie.isAnimationFinished(stateTime) && (bonus.isObtained() || bonus.isDeleted())){
                 state = State.DEAD;
             }
-            else if (assets.aliendie.isAnimationFinished(stateTime) && powerUp < 8.0){
+            else if (assets.aliendie.isAnimationFinished(stateTime) && powerUp < 9.5){
                 state = State.DEAD;
             }
 

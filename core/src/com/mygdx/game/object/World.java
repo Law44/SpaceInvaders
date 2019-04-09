@@ -177,7 +177,7 @@ public class World {
         Rectangle shipRectangle = new Rectangle(ship.position.x, ship.position.y, ship.frame.getRegionWidth(), ship.frame.getRegionHeight());
 
         for (Alien alien : alienArmy.aliens) {
-            if (alien.bonus.isStart()) {
+            if (alien.bonus.isFalling()) {
                 Rectangle bonusRectangle = new Rectangle(alien.bonus.position.x, alien.bonus.position.y, alien.bonus.frame.getRegionWidth(), alien.bonus.frame.getRegionHeight());
                 if (Intersector.overlaps(bonusRectangle, shipRectangle)) {
                     alien.bonus.getBonus();
@@ -189,7 +189,7 @@ public class World {
 
     private void checkBonusinWorld(){
         for (Alien alien : alienArmy.aliens) {
-            if (alien.bonus.isStart()) {
+            if (alien.bonus.isFalling()) {
                 if (alien.bonus.position.y < 0) {
                     alien.bonus.deleteBonus();
                 }

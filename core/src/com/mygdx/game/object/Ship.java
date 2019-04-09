@@ -89,7 +89,7 @@ public class Ship {
             idle();
         }
 
-        if(Controls.isShootPressed() && state != State.DYING) {
+        if(Controls.isShootPressed() && state != State.DYING && state != State.RESPAWN) {
             shoot();
             assets.shootSound.play();
         }

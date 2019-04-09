@@ -10,36 +10,38 @@ public class Bonus {
     Vector2 position;
     float stateTime;
     TextureRegion frame;
-    boolean start;
-    boolean get;
-    boolean delete;
+    State state;
+
+    enum State {
+        FALLING, OBTAINED, DELETED
+    }
 
     public Bonus(float x, float y) {
         this.position = new Vector2(x, y);
     }
 
     public void getBonus(){
-        this.get = true;
+        this.state = State.OBTAINED;
     }
 
     public void deleteBonus(){
-        this.delete = true;
+        this.state = State.DELETED;
     }
 
     public boolean isDeleted(){
-        return delete;
+        return state == State.DELETED;
     }
 
-    public boolean isStart() {
-        return start;
+    public boolean isFalling() {
+        return state == State.FALLING;
     }
 
-    public boolean isGet() {
-        return get;
+    public boolean isObtained() {
+        return state == State.OBTAINED;
     }
 
-    public void spawn(boolean start, float x, float y) {
-        this.start = start;
+    public void spawn(float x, float y) {
+        this.state = State.FALLING;
         this.position = new Vector2(x, y);
     }
 
@@ -50,7 +52,7 @@ public class Bonus {
     void update(float delta, Assets assets) {
         stateTime+= delta;
         frame = assets.naveidle.getKeyFrame(stateTime, false);
-        if (start) {
+        if (this.state == State.FALLING) {
             position.y--;
         }
     }
