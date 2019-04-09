@@ -86,8 +86,6 @@ public class World {
 
     private void checkStatusGame(){
         checkAliensNumber();
-        checkGetBonus();
-        checkBonusinWorld();
     }
 
 
@@ -99,6 +97,8 @@ public class World {
         checkShootsToShip();
         checkAlienInWorld();
         checkAlienCollisionShip();
+        checkGetBonus();
+        checkBonusinWorld();
     }
 
     private void checkAlienCollisionShip() {
@@ -159,7 +159,7 @@ public class World {
         for(Shoot shoot: ship.weapon.shoots){
             Rectangle shootRectangle = new Rectangle(shoot.position.x, shoot.position.y, shoot.frame.getRegionWidth(), shoot.frame.getRegionHeight());
             for(Alien alien: alienArmy.aliens){
-                if(alien.isAlive()) {
+                if(alien.isAlive() || alien.state == Alien.State.FORMING || alien.state == Alien.State.MOVINGDOWN) {
                     Rectangle alienRectangle = new Rectangle(alien.position.x, alien.position.y, alien.frame.getRegionWidth(), alien.frame.getRegionHeight());
 
                     if (Intersector.overlaps(shootRectangle, alienRectangle)) {
@@ -181,7 +181,8 @@ public class World {
                 Rectangle bonusRectangle = new Rectangle(alien.bonus.position.x, alien.bonus.position.y, alien.bonus.frame.getRegionWidth(), alien.bonus.frame.getRegionHeight());
                 if (Intersector.overlaps(bonusRectangle, shipRectangle)) {
                     alien.bonus.getBonus();
-                    lifes++;
+                    if (lifes<5)lifes++;
+                    else score +=200;
                 }
             }
         }
